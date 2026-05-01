@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vector Calculus Multi-Tool</title>
+  <meta name="description" content="Interactive web-based vector calculus visualizer featuring TNB frame, curvature, torsion, arc length, and static analysis tools." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.plot.ly/plotly-2.32.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dark">
+
+  <!-- ── Top Bar ── -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <svg class="logo-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2"/>
+        <path d="M6 16 Q10 8 16 16 Q22 24 26 16" stroke="currentColor" stroke-width="2" fill="none"/>
+        <line x1="16" y1="16" x2="22" y2="10" stroke="#89b4fa" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="16" y1="16" x2="22" y2="20" stroke="#a6e3a1" stroke-width="2.5" stroke-linecap="round"/>
+        <line x1="16" y1="16" x2="10" y2="12" stroke="#fab387" stroke-width="2.5" stroke-linecap="round"/>
+      </svg>
+      <span class="app-title">Vector Calculus Multi-Tool</span>
+    </div>
+    <div class="topbar-right">
+      <button id="themeToggle" class="theme-btn" title="Toggle light/dark mode" aria-label="Toggle theme">
+        <span class="theme-icon">☀️</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ── Tab Bar ── -->
+  <nav class="tab-bar" role="tablist">
+    <button class="tab-btn active" data-tab="tnb" id="tab-tnb" role="tab" aria-selected="true">
+      <span class="tab-num">1</span> Interactive TNB Visualizer
+    </button>
+    <button class="tab-btn" data-tab="analysis" id="tab-analysis" role="tab" aria-selected="false">
+      <span class="tab-num">2</span> Static Analysis Tools
+    </button>
+  </nav>
+
+  <!-- ══════════════════════════════════════════
+       TAB 1 — TNB Visualizer
+  ══════════════════════════════════════════ -->
+  <div id="pane-tnb" class="tab-pane active">
+    <div class="tnb-layout">
+
+      <!-- Left sidebar -->
+      <aside class="sidebar" id="tnbSidebar">
+        <h2 class="sidebar-title">TNB Frame Visualizer</h2>
+
+        <!-- Paths list -->
+        <div class="card">
+          <div class="card-header">Paths</div>
+          <div id="pathList" class="path-list"></div>
+          <div class="btn-row">
+            <button class="btn btn-green" id="btnAddPath">+ Add</button>
+            <button class="btn btn-red" id="btnRemovePath">− Remove</button>
+            <button class="btn btn-yellow" id="btnUpdatePath">Update</button>
+          </div>
+        </div>
+
+        <!-- Preset selector -->
+        <div class="field-row">
+          <label class="field-label" for="presetSelect">Add Preset:</label>
+          <select id="presetSelect" class="select">
+            <option value="">— choose —</option>
+            <option value="Helix">Helix</option>
+            <option value="Circle (2D)">Circle (2D)</option>
+            <option value="Trefoil Knot">Trefoil Knot</option>
+            <option value="Torus Knot (2,3)">Torus Knot (2,3)</option>
+            <option value="Lissajous (2D)">Lissajous (2D)</option>
+            <option value="Cycloid (2D)">Cycloid (2D)</option>
+            <option value="Spiral (2D)">Spiral (2D)</option>
+            <option value="Viviani Curve">Viviani Curve</option>
+            <option value="Parabolic 3D">Parabolic 3D</option>
+          </select>
+        </div>
+
+        <!-- r(t) inputs -->
+        <div class="card">
+          <div class="card-header">r(t) Components</div>
+          <div class="entry-grid">
+            <label class="mono" for="entryX">x(t) =</label>
+            <input id="entryX" class="input mono" type="text" value="cos(t)" spellcheck="false" />
+            <label class="mono" for="entryY">y(t) =</label>
+            <input id="entryY" class="input mono" type="text" value="sin(t)" spellcheck="false" />
+            <label class="mono" for="entryZ">z(t) =</label>
+            <input id="entryZ" class="input mono" type="text" value="t / 5" spellcheck="false" placeholder="leave blank for 2D" />
+          </div>
+          <div class="t-range-row">
+            <span class="mono small">t ∈ [</span>
+            <input id="entryTmin" class="input mono small trange" type="text" value="0" />
+            <span class="mono small">,</span>
+            <input id="entryTmax" class="input mono small trange" type="text" value="4*pi" />
+            <span class="mono small">]</span>
+          </div>
+        </div>
+
+        <!-- Plot button -->
+        <button class="btn btn-plot" id="btnPlot">▶  Plot</button>
+
+        <!-- t₀ slider -->
+        <div class="slider-section">
+          <div class="slider-label">t₀ <span class="subdued">(selected path)</span></div>
+          <div class="slider-row">
+            <input id="t0Slider" type="range" min="0" max="12.566" step="0.01" value="1.0" />
+            <span id="t0Val" class="mono small">1.00</span>
+          </div>
+        </div>
+
+        <!-- Vector toggles -->
+        <div class="section-label">Show Vectors</div>
+        <div class="vec-checks" id="vecChecks">
+          <label class="vec-check"><input type="checkbox" id="showT" checked /><span class="dot" style="background:#3b82f6"></span>T (Unit Tangent)</label>
+          <label class="vec-check"><input type="checkbox" id="showN" checked /><span class="dot" style="background:#22c55e"></span>N (Principal Normal)</label>
+          <label class="vec-check"><input type="checkbox" id="showB" checked /><span class="dot" style="background:#f97316"></span>B (Binormal)</label>
+          <label class="vec-check"><input type="checkbox" id="showV" /><span class="dot" style="background:#a855f7"></span>v (Velocity r')</label>
+          <label class="vec-check"><input type="checkbox" id="showA" /><span class="dot" style="background:#06b6d4"></span>a (Acceleration r'')</label>
+        </div>
+
+        <!-- Vector scale -->
+        <div class="slider-section">
+          <div class="slider-label">Vector Scale</div>
+          <div class="slider-row">
+            <input id="scaleSlider" type="range" min="0.1" max="3.0" step="0.05" value="0.5" />
+            <span id="scaleVal" class="mono small">0.50</span>
+          </div>
+        </div>
+
+        <!-- κ / τ / L display -->
+        <div class="card kappa-card">
+          <div class="kappa-row"><span class="kappa-sym">κ =</span><span id="kappaVal" class="kappa-num yellow">—</span></div>
+          <div class="kappa-row"><span class="kappa-sym">τ =</span><span id="tauVal" class="kappa-num teal">—</span></div>
+          <div class="kappa-row"><span class="kappa-sym">L =</span><span id="arcLenVal" class="kappa-num peach">—</span></div>
+        </div>
+
+        <!-- Info panel -->
+        <div class="card info-card">
+          <div class="card-header">Calculus Data <span class="subdued">(selected path)</span></div>
+          <pre id="infoPanel" class="info-pre">—</pre>
+        </div>
+      </aside>
+
+      <!-- 3D canvas area -->
+      <main class="canvas-area">
+        <div id="plotlyContainer" style="width: 100%; height: 100%;"></div>
+        <div id="canvasTitle" class="canvas-title"></div>
+        <div id="errorBanner" class="error-banner" style="display:none;"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       TAB 2 — Static Analysis Tools
+  ══════════════════════════════════════════ -->
+  <div id="pane-analysis" class="tab-pane">
+    <div class="analysis-layout">
+      <aside class="sidebar">
+        <h2 class="sidebar-title">Static Analysis Tools</h2>
+
+        <div class="field-row">
+          <label class="field-label" for="analysisCurveSelect">Target Curve:</label>
+          <select id="analysisCurveSelect" class="select">
+            <option value="Helix">Helix</option>
+            <option value="Circle (2D)">Circle (2D)</option>
+            <option value="Trefoil Knot">Trefoil Knot</option>
+            <option value="Torus Knot">Torus Knot</option>
+            <option value="Lissajous (2D)">Lissajous (2D)</option>
+            <option value="Cycloid (2D)">Cycloid (2D)</option>
+            <option value="Spiral (2D)">Spiral (2D)</option>
+            <option value="Parabola (3D)">Parabola (3D)</option>
+            <option value="Custom">Custom</option>
+          </select>
+        </div>
+
+        <div class="card" id="customInputCard">
+          <div class="card-header">Custom r(t) Input</div>
+          <div class="entry-grid">
+            <label class="mono" for="aEntryX">x(t) =</label>
+            <input id="aEntryX" class="input mono" type="text" value="t*cos(t)" spellcheck="false" />
+            <label class="mono" for="aEntryY">y(t) =</label>
+            <input id="aEntryY" class="input mono" type="text" value="t*sin(t)" spellcheck="false" />
+            <label class="mono" for="aEntryZ">z(t) =</label>
+            <input id="aEntryZ" class="input mono" type="text" value="t" spellcheck="false" placeholder="blank = 2D" />
+          </div>
+          <div class="t-range-row">
+            <span class="mono small">t ∈ [</span>
+            <input id="aEntryTmin" class="input mono small trange" type="text" value="0" />
+            <span class="mono small">,</span>
+            <input id="aEntryTmax" class="input mono small trange" type="text" value="4*pi" />
+            <span class="mono small">]</span>
+          </div>
+        </div>
+
+        <div class="analysis-btns">
+          <button class="btn btn-analysis" id="btnDerivatives">📈 Derivative Comparison</button>
+          <button class="btn btn-analysis" id="btnComponents">📉 Component Functions</button>
+          <button class="btn btn-analysis" id="btnCurvaturePlot">〜 Curvature Plot</button>
+          <button class="btn btn-analysis" id="btnArcLength">∫ Arc Length Plot</button>
+        </div>
+
+        <div id="analysisError" class="error-banner" style="display:none;margin-top:8px;"></div>
+      </aside>
+
+      <main class="analysis-main">
+        <div id="analysisCharts" class="analysis-charts">
+          <div class="placeholder-msg" id="analysisPlaceholder">
+            <div class="placeholder-icon">📊</div>
+            <div>Select a curve and click an analysis button to generate a plot.</div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="math_engine.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
