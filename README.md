@@ -1,13 +1,35 @@
 # Vector Calculus Multi-Tool
 
+![Python Version](https://img.shields.io/badge/python-3.8%2B-blue.svg)
+![License](https://img.shields.io/badge/license-MIT-green.svg)
+![Status](https://img.shields.io/badge/status-active-success.svg)
+
 Mathematics, much like the physical sciences, is ultimately a pursuit of clarity in a complex world. While one might argue that the abstract elegance of vector calculus is an end in itself, its true power lies in its ability to model the physical universe—from the fluid dynamics of ocean currents to the invisible electromagnetic fields that govern modern technology. However, a mere theoretical understanding of these equations, though intellectually rewarding, is often insufficient. We must be able to visualize these concepts, to draw deductions, and to bridge the gap between pure mathematics and physical intuition. One might ask, *“Of what use is a rigorous mathematical model if we cannot intuitively grasp its geometry and behavior?”*
 
 This project, the **Vector Calculus Multi-Tool**, is designed to bring abstract vector-valued functions in one variable to life. By providing an interactive platform to explore Tangent, Normal, and Binormal (TNB) frames alongside static mathematical analysis, it allows users to step beyond static equations on a page and dynamically interact with the geometry of the physical world.
+
+## Visual Showcase
+
+![Interactive TNB Visualizer](screenshot1.png)
+*Exploring the Tangent, Normal, and Binormal frames of a 3D curve in real-time.*
+
+![Static Analysis Tools](screenshot2.png)
+*Detailed static analysis and parameter breakdowns for vector-valued functions.*
 
 ## Features
 
 - **Interactive TNB Visualizer:** A dynamic environment to explore the Frenet-Serret formulas. Visualize the Tangent, Normal, and Binormal (TNB) frame as it moves along complex 3D curves, providing intuitive, immediate insight into curvature and torsion.
 - **Static Analysis Tools:** A dedicated module for rigorous mathematical analysis, allowing you to plot, dissect, and deduce the properties of various vector fields and parametric equations.
+
+## Module Architecture
+
+The application is logically separated into a decoupled frontend and backend to ensure mathematical integrity and UI responsiveness:
+
+- **`main.py`**: The primary application entry point. Initializes the `tkinter` event loop and the main tabbed layout.
+- **`math_physics.py`**: The core mathematical engine. Contains all parametric curve definitions (e.g., helix, torus knot) and numerical calculus operations (derivatives, curvature, torsion, arc length, and line integrals). This module is fully unit-tested to guarantee precision.
+- **`tabs/`**: Contains the specialized UI visualization controllers.
+  - `tnb_applet.py`: Manages the interactive 3D Matplotlib canvas and UI sliders for the TNB frame.
+  - `analysis_tools.py`: Manages the static mathematical analysis and static plotting tools.
 
 ## Getting Started
 
@@ -28,4 +50,8 @@ Ensure you have Python 3.x installed along with the required scientific and UI l
 3. Run the main application script:
    ```bash
    python main.py
+   ```
+4. To run the mathematical test suite:
+   ```bash
+   python -m unittest test_math_physics.py
    ```
