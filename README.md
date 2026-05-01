@@ -2,9 +2,7 @@
 
 Mathematics, much like the physical sciences, is ultimately a pursuit of clarity in a complex world. While one might argue that the abstract elegance of vector calculus is an end in itself, its true power lies in its ability to model the physical universe—from the fluid dynamics of ocean currents to the invisible electromagnetic fields that govern modern technology. However, a mere theoretical understanding of these equations, though intellectually rewarding, is often insufficient. We must be able to visualize these concepts, to draw deductions, and to bridge the gap between pure mathematics and physical intuition. One might ask, *“Of what use is a rigorous mathematical model if we cannot intuitively grasp its geometry and behavior?”*
 
-From the early geometric proofs of antiquity to the complex analytical tools of modern computation, our methods for studying mathematical phenomena have evolved significantly. Today, computational visualization serves as a crucial step in that evolution.
-
-This project, the **Vector Calculus Multi-Tool**, is designed to bring abstract vector-valued functions to life. By providing an interactive platform to explore Tangent, Normal, and Binormal (TNB) frames alongside static mathematical analysis, it allows users to step beyond static equations on a page and dynamically interact with the geometry of the physical world.
+This project, the **Vector Calculus Multi-Tool**, is designed to bring abstract vector-valued functions in one variable to life. By providing an interactive platform to explore Tangent, Normal, and Binormal (TNB) frames alongside static mathematical analysis, it allows users to step beyond static equations on a page and dynamically interact with the geometry of the physical world.
 
 ## Features
 
@@ -21,7 +19,7 @@ Ensure you have Python 3.x installed along with the required scientific and UI l
 ### Installation & Execution
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/<YOUR-USERNAME>/vector-valued-functions.git
+   git clone https://github.com/Japn07/vector-valued-functions.git
    ```
 2. Navigate into the project directory:
    ```bash
