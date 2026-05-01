@@ -21,7 +21,7 @@ Ensure you have Python 3.x installed along with the required scientific and UI l
 ### Installation & Execution
 1. Clone this repository to your local machine:
    ```bash
-   git clone https://github.com/<YOUR-USERNAME>/vector-valued-functions.git
+   git clone https://github.com/Japn07/vector-valued-functions.git
    ```
 2. Navigate into the project directory:
    ```bash
