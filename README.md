@@ -8,6 +8,11 @@ Mathematics, much like the physical sciences, is ultimately a pursuit of clarity
 
 This project, the **Vector Calculus Multi-Tool**, is designed to bring abstract vector-valued functions in one variable to life. By providing an interactive platform to explore Tangent, Normal, and Binormal (TNB) frames alongside static mathematical analysis, it allows users to step beyond static equations on a page and dynamically interact with the geometry of the physical world.
 
+## Authorship & Development Approach
+
+**Project Architect & Mathematical Director:** Japn07  
+*While I designed the mathematical architecture, conceptualized the features, and guided the overall vision of this tool, the underlying Python codebase was engineered in collaboration with an AI coding assistant. My role was to serve as the lead architect—defining the physics constraints, structuring the vector math modules, and validating the geometric outputs—while leveraging AI as the "builder" to rapidly compile the UI and rendering pipelines.*
+
 ## Visual Showcase
 
 ![Interactive TNB Visualizer](screenshot1.png)
